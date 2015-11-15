@@ -1,9 +1,9 @@
-# Stretch
+# Sketch
 成品未出，repo 先行。
 
 这是我学习 [React Native](https://github.com/facebook/react-native) 的实练项目，豆瓣客户端（广播 + 电影）。
 
-![Imgur](http://i.imgur.com/B0Gj362.gifv)
+![Sketch](https://github.com/iplus26/react-native-watched/raw/master/Sketch.gif)
 
 # Acknowledgements
 * [moment](http://momentjs.com)
