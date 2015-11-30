@@ -1,0 +1,22 @@
+{
+  "name": "Watched",
+  "version": "0.0.1",
+  "description": "A 3rd-party Douban client built with React Native",
+  "private": true,
+  "author": {
+    "name": "Ivan Jiang",
+    "email": "iplus26@gmail.com"
+  },
+  "scripts": {
+    "start": "node_modules/react-native/packager/packager.sh"
+  },
+  "dependencies": {
+    "moment": "^2.10.6",
+    "gb-native-router": "0.5.0",
+    "react-native": "^0.14.2",
+    "react-native-icons": "^0.6.3",
+    "react-native-modalbox": "^1.2.3",
+    "react-native-safari-view": "^0.1.4",
+    "react-native-spinkit": "0.0.5"
+  }
+}

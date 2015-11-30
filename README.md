@@ -6,8 +6,10 @@
 ![Sketch](https://github.com/iplus26/react-native-watched/raw/master/Sketch.gif)
 
 # Acknowledgements
+* Icons from [Icons8](http://icons8.com)
 * [moment](http://momentjs.com)
 * [react-native-blur](https://github.com/Kureev/react-native-blur)
+* [react-native-icons](https://github.com/corymsmith/react-native-icons)
 * [react-native-refreshable-listview](https://github.com/jsdf/react-native-refreshable-listview)
 * [react-native-safari-view](https://github.com/naoufal/react-native-safari-view)
 * [react-native-spinkit](https://github.com/maxs15/react-native-spinkit)
