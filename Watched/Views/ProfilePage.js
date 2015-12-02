@@ -12,6 +12,7 @@ var {View,
 
 // my own components 
 var Tool = require('./../lib/Tool');
+var User = require('./../User/User');
 var UserPostsTimeline  = require('./../Post/TimelineListView');
 
 // wheels others made
@@ -80,7 +81,7 @@ var ProfilePage = React.createClass({
       return (
 
         // jshint ignore: start
-        <ScrollView>
+        <ScrollView automaticallyAdjustContentInsets={false}>
 
           <Text>没有用户数据，</Text>
 
@@ -92,28 +93,13 @@ var ProfilePage = React.createClass({
         // jshint ignore: end
         );
     } else {
+      console.log(this.state.douban_user);
       return (
         // jshint ignore: start
-        <ScrollView>
-        <View>
-
-          <Image source = {{uri: this.state.douban_user.large_avatar}}>
-            <BlurView blurType="light" style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'transparent',
-              width: Tool.getDeviceWidth(),
-              height: Tool.getDeviceWidth() * 0.5625,
-            }}>
-            <Image style={{width: 100, height: 100, borderRadius: 50, }} 
-                    source = {{uri: this.state.douban_user.large_avatar}}/>
-            </BlurView>
-          </Image>
-
-            <TouchableHighlight onPress={this._logout}><Text>退出</Text></TouchableHighlight>
-
-        </View>
-        <UserPostsTimeline access_token={this.state.access_token} user_id={this.state.douban_user.id}/>
+        <ScrollView automaticallyAdjustContentInsets={false}>
+          <User {...this.props} user={this.state.douban_user}
+            access_token={this.state.access_token} 
+            user_id={this.state.douban_user.id}/>
         </ScrollView>
         // jshint ignore: end
         );

@@ -161,6 +161,7 @@
 		2C0477E11BF88B7B002D643F /* FontAwesomeKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FontAwesomeKit; path = "../node_modules/react-native-icons/ios/ReactNativeIcons/Libraries/FontAwesomeKit"; sourceTree = "<group>"; };
 		2C0477E31BF89535002D643F /* ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ionicons.ttf; sourceTree = "<group>"; };
 		2C4D9AF01C0CA4E200087DFF /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
+		2C89B24C1C0F24E3002D3D36 /* Watched.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Watched.xcodeproj; sourceTree = "<group>"; };
 		2CCA060C1BF6289900F51762 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		2CCA06131BF629BA00F51762 /* SafariViewManager.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SafariViewManager.xcodeproj; path = "../node_modules/react-native-safari-view/SafariViewManager.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -310,6 +311,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2C89B24D1C0F24E3002D3D36 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2CCA060D1BF6289900F51762 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -366,6 +372,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				2C89B24C1C0F24E3002D3D36 /* Watched.xcodeproj */,
 				2C0477E31BF89535002D643F /* ionicons.ttf */,
 				2C0477E11BF88B7B002D643F /* FontAwesomeKit */,
 				13B07FAE1A68108700A75B9A /* Watched */,
@@ -510,6 +517,10 @@
 				{
 					ProductGroup = 2CCA06141BF629BA00F51762 /* Products */;
 					ProjectRef = 2CCA06131BF629BA00F51762 /* SafariViewManager.xcodeproj */;
+				},
+				{
+					ProductGroup = 2C89B24D1C0F24E3002D3D36 /* Products */;
+					ProjectRef = 2C89B24C1C0F24E3002D3D36 /* Watched.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -763,6 +774,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEAD_CODE_STRIPPING = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

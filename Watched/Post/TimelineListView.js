@@ -15,21 +15,18 @@ var {Text,
   TouchableHighlight, } = React;
 
 // my own components
-var {Tool,
-  Config, } = require('./../lib/Toolbox');
+var {Tool, Config, } = require('./../lib/Toolbox');
 var IvText = require('./../lib/IvText');
 var Attachment = require('./Attachment');
 var Interaction = require('./Interaction');
 var LoadingPage = require('./../Views/LoadingPage');
 var MovieDetail = require('./../Movie/MovieDetail');
+var UserThumbnail = require('./components/UserThumbnail');
 
 // wheels made by others
-var moment = require('moment');
 var Spinner = require('react-native-spinkit');
+var moment = require('moment'); require('moment/locale/zh-cn');
 var RefreshableListView = require('react-native-refreshable-listview');
-
-var ds = null;
-var couldLoadMorePosts = true;
 
 var TimelineListView = React.createClass({
   getInitialState: function() {
@@ -41,35 +38,53 @@ var TimelineListView = React.createClass({
     };
   },
 
+  dataCache: [],
+  couldLoadMorePosts: true, 
+  lastRenderedRowID: -1,
+
   componentDidMount: function() {
+    var f = function() {
+      this.fetchData(this.props.user_id, null);
+    }.bind(this);
     // 获取广播
-    this.fetchData(this.props.access_token, null, this.props.user_id);
+    if (this.props.user_id) {
+      setTimeout(f, 300);
+    } else {
+      f();
+    }
   },
 
-  _onLoad: function() {
-    // timeline 顶部下拉刷新
-    this.fetchData(this.props.access_token, {
-      since_id: ds[0].id
-    }, this.props.user_id);
+  onLoad: function() {
+
+    this.fetchData(this.props.user_id, {
+        since_id: this.dataCache[0].id
+      });
+
+  },
+
+  hasMore: function() {
+    return this.dataCache.length > this.lastRenderedRowID + 1
   },
 
   _onEndReached: function() {
-    // timeline 到底时获取更早的广播
-    console.log('广播列表到底，获取更多内容...');
+    if (!this.hasMore()) 
+    console.log(this.hasMore() + '广播列表到底，获取更多内容...');
     // this.fetchData(this.props.access_token, {
     //   until_id: ds[ds.length - 1].id,
     // }, this.props.user_id);
   },
 
-  fetchData: function(token, options, user_id) {
+  fetchData: function(user_id, options) {
 
     var self = this;
+    var token = this.props.access_token;
     var url = Config.API_URL +
-      (user_id ? 'shuo/v2/statuses/user_timeline/' + user_id : 'shuo/v2/statuses/home_timeline') + '?';
+      (user_id ? 'shuo/v2/statuses/user_timeline/' + user_id : 
+      'shuo/v2/statuses/home_timeline') + '?';
     console.log('url: ' + url);
 
-    if (couldLoadMorePosts) {
-      couldLoadMorePosts = false;
+    if (this.couldLoadMorePosts) {
+      this.couldLoadMorePosts = false;
       fetch(url + Tool.param(options), {
         method: 'GET',
         headers: {
@@ -78,33 +93,42 @@ var TimelineListView = React.createClass({
       })
         .then((response) => response.json())
         .then((d) => {
-
-          // console.log(d);
+          
+          var cache = self.dataCache;
 
           if (Array.isArray(d) && d.length > 0) {
-            if (Array.isArray(ds) && ds.length > 0) {
-              ds = d[0].id > ds[0].id ? d.concat(ds) : ds.concat(d);
+            if (Array.isArray(cache) && cache.length > 0) {
+              cache = d[0].id > cache[0].id ? d.concat(cache) : cache.concat(d);
             } else {
-              ds = d;
+              cache = d;
             }
 
             self.setState({
               loaded: true,
-              dataSource: this.state.dataSource.cloneWithRows(ds),
+              dataSource: this.state.dataSource.cloneWithRows(cache),
             });
+
           } else {
-            console.log('获取广播失败... ');
+
+            console.log('没有新广播/获取广播失败... ');
             console.log(d);
+          
           }
 
-          couldLoadMorePosts = true;
+          self.dataCache = cache;
+          self.couldLoadMorePosts = true;
 
         })
         .done();
     }
   },
 
-  _renderRow: function(post, sectionID, rowID) {
+  renderRow: function(post, sectionID, rowID) {
+
+    console.log(rowID);
+
+    this.lastRenderedRowID = parseInt(rowID) > this.lastRenderedRowID ? 
+    parseInt(rowID) : this.lastRenderedRowID;
 
     var self = this;
     var onLongPress = function() {
@@ -116,10 +140,12 @@ var TimelineListView = React.createClass({
         console.log(buttonIndex);
       });
     };
+    
     var onPress = function() {
       this.props.toRoute({
         name: '详情',
         component: require('./PostDetail'),
+        passProps: Tool.extend(this.props, {id: post.id}),
       });
     }.bind(this);
 
@@ -151,20 +177,20 @@ var TimelineListView = React.createClass({
         {reshare_header}
         <View style={ styles.cell }>
 
-          <Image style={ styles.thumbnail } 
-                      source={{uri: post.user.large_avatar || post.user.small_avatar}} />
+          <UserThumbnail {...this.props} user={post.user} />
       
           <View style = {styles.contentWrapper}>
       
           <View style = {{flexDirection: 'row', alignItems: 'center', }}>
-          <IvText numberOfLines = {1} style={{color: Config.BASE_COLOR, marginRight: 2, fontWeight: '400', }}>
+          <IvText numberOfLines = {1} style={{
+            color: Config.BASE_COLOR, marginRight: 2, fontWeight: '400', }}>
             {post.user.screen_name}
           </IvText>
           { this._renderTitle.call(this, post.title) }
           </View>
 
           <View style = {{justifyContent: 'center', flexDirection: 'row', }}>
-          {id}{this._renderTime.call(this, post.created_at)}
+          {id}{this.renderTime.call(this, post.created_at)}
           </View>
 
           { this._renderAttachments(post.attachments[0]) }
@@ -192,26 +218,8 @@ var TimelineListView = React.createClass({
 
   },
 
-  _renderTime: function(created_at) {
-    moment.locale('en', {
-      relativeTime: {
-        past: "%s前",
-        s: "1秒",
-        ss: '%d秒',
-        m: "1分钟",
-        mm: "%d分钟",
-        h: "1小时",
-        hh: "%d小时",
-        d: "1天",
-        dd: "%d天",
-        M: "1个月",
-        MM: "%d个月",
-        y: "1年",
-        yy: "%d年",
-      }
-    });
+  renderTime: function(created_at) {
     var time = moment(created_at, 'YYYY-MM-DD hh:mm:ss').fromNow();
-
     return (<Text style={{color: Config.GRAY_COLOR, flex: 1, textAlign: 'right', }}>
       {time}</Text>);
   },
@@ -239,24 +247,21 @@ var TimelineListView = React.createClass({
 
     if (this.state.loaded) {
 
+      // 加载完成
+
       var self = this;
 
       return (
-        // jshint ignore: start
         <RefreshableListView
-         removeClippedSubviews={true}
+          removeClippedSubviews={true}
           dataSource = {this.state.dataSource}
-          renderRow = {this._renderRow}
-          loadData={this._onLoad}
-          refreshingIndictatorComponent={
-            <View style={{alignItems: 'center', }}>
-              <Spinner isVisible={true} type={'Bounce'} color={Config.BASE_COLOR}/>
-            </View>}
+          renderRow = {this.renderRow}
+          loadData={this.onLoad}
+          refreshingIndictatorComponent={<LoadingPage />}
           style={styles.listView}
           onEndReached={this._onEndReached}
-          onEndReachedThreshold={4} //
+          // onEndReachedThreshold={0}
         />
-        // jshint ignore: end
         );
 
     } else {
@@ -279,12 +284,6 @@ var styles = StyleSheet.create({
     borderColor: '#E3E3E5',
     flexDirection: 'row',
     padding: 10,
-  },
-
-  thumbnail: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
   },
 
   contentWrapper: {

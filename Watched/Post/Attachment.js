@@ -181,7 +181,7 @@ var Attachment = React.createClass({
     return (
       <View style={{paddingTop: 10, }}>
       <TouchableHighlight onPress = { () => self._openURL(attachment, readerMode || false) }
-      underlayColor = '#02b875' activeOpacity = {0}>
+      underlayColor = '#82D9B9' activeOpacity = {0}>
 
       <View style = {styles.attachment}>
           <View style={{flex: 1, }}>

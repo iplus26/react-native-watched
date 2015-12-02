@@ -5,7 +5,7 @@ var View = React.View;
 
 var Spinner = require('react-native-spinkit');
 
-var Tool = require('./../lib/Tool');
+var {Tool, Config, } = require('./../lib/Toolbox');
 
 var Loading = React.createClass({
   render: function() {
@@ -14,7 +14,7 @@ var Loading = React.createClass({
       // jshint ignore: start
 
       <View style={{ width: Tool.getDeviceWidth(), alignItems: 'center',}}>
-        <Spinner isVisible={true} type='Bounce' color='#02b875' />
+        <Spinner isVisible={true} type='Bounce' color={Config.BASE_COLOR} />
       </View>
 
       // jshint ignore: end

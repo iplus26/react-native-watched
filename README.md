@@ -5,16 +5,15 @@
 
 ![Sketch](https://github.com/iplus26/react-native-watched/raw/master/Sketch.gif)
 
-# Acknowledgements
-* Icons from [Icons8](http://icons8.com)
-* [moment](http://momentjs.com)
-* [react-native-blur](https://github.com/Kureev/react-native-blur)
-* [react-native-icons](https://github.com/corymsmith/react-native-icons)
-* [react-native-refreshable-listview](https://github.com/jsdf/react-native-refreshable-listview)
-* [react-native-safari-view](https://github.com/naoufal/react-native-safari-view)
-* [react-native-spinkit](https://github.com/maxs15/react-native-spinkit)
-
 # log
+
+**Dec 2, 2015**
+
+* 用户页面初稿
+* 点击用户头像进入用户页面，将 PostTimelineListView 拓展成为关注的时间流 + 某个用户的时间流
+* 将原来的登录用户的个人页面拓展为某个用户的页面
+
+**...**
 
 **Nov 13, 2015** 
 

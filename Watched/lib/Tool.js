@@ -19,6 +19,28 @@ var Tool = {
     return str.join("&");
   },
 
+  extend: function() {
+    var copy, prop, i = 0,
+        target = {},      // 目标对象
+        length = arguments.length; 
+
+    for ( ; i < length; i++) {
+      copy = arguments[i];
+      for (prop in copy) {
+        if (copy.hasOwnProperty(prop)) {
+          if (target.hasOwnProperty(prop)) {
+            throw 'Conflict! ';
+          } else {
+            target[prop] = copy[prop];
+          }
+        }
+      }
+    }
+
+    return target;
+    
+  },
+
   openURL: function(url, func, readerMode) {
 
     if (url == null) {

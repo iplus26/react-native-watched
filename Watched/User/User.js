@@ -1,28 +1,29 @@
 'use strict';
 
 var React = require('react-native');
-var {View, Text, } = React;
+var {View, Text, ScrollView, StyleSheet, } = React;
+var PostTimeline = require('./../Post/TimelineListView');
+var UserInfo = require('./UserInfo');
 
-var User = React.createClass({
-	getInitialState: function(){
-		return {
-			user: null,
-		}
-	},
+class User extends React.Component {
+	constructor (props) {
+		super(props);
+	}
 
-	componentDidMount: function() {
-		this.setState({
-			user: null,
-		})
-	},
+	render() {
+		return (
+			<ScrollView automaticallyAdjustContentInsets={false} style={styles.container}>
+				<UserInfo {...this.props} />
+				<PostTimeline {...this.props} user_id={this.props.user.id}/>
+			</ScrollView>
+		)
+	}
+}
 
-	render: function() {
-		if (this.state.user) {
-			return (<View><Text>有用户数据</Text></View>)
-		} else {
-			return (<View><Text>没有用户数据</Text></View>)
-		}
-	},
-});
+var styles = StyleSheet.create({
+	container: {
+		marginBottom: 49,
+	}
+})
 
 module.exports = User;
