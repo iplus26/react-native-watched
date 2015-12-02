@@ -41,10 +41,10 @@ var Tool = {
     
   },
 
-  openURL: function(url, func, readerMode) {
+  openURL: function(url, callback, readerMode) {
 
-    if (url == null) {
-      func();
+    if (url == null && callback) {
+      callback();
     } else {
       SafariView.isAvailable()
         .then(available => SafariView.show({
@@ -54,17 +54,22 @@ var Tool = {
     }
   },
 
-  urlify: function(text) {
-    var urlRegex = /(https?:\/\/[^\s]+)/g;
-    var self = this;
-    return text.replace(urlRegex, function(url) {
-      return (
-        <Touchablehighlight onPress={ (url) => self.openURL(url) }>
-          <Text>url</Text>
-        </Touchablehighlight>);
-    });
-  // or alternatively
-  // return text.replace(urlRegex, '<a href="$1">$1</a>')
+  // return an array
+  urlify: function(text, style) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g, 
+        self = this,
+        urlified, style = style ? style : {};
+
+    urlified = text.split(urlRegex).map(function(str) {
+      if (urlRegex.test(str)) {
+        return (<Text style={style} onPress={self.openURL.bind(self, str)}>{str}</Text>);
+      } else {
+        return str;
+      }
+    })
+
+    
+    return urlified;
   },
 
   getDeviceWidth: function() {

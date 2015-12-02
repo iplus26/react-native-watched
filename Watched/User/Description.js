@@ -2,7 +2,7 @@
 
 var React = require('react-native');
 var {View, Text, TouchableHighlight, StyleSheet, } = React;
-var {Config, } = require('./../lib/Toolbox');
+var {Config, Tool, } = require('./../lib/Toolbox');
 
 class Description extends React.Component {
 	constructor(props) {
@@ -18,7 +18,7 @@ class Description extends React.Component {
 				long = this.props.desc || '', 
 				tooLong = long.length >= 50,
 				showMore = this.state.showMore,
-				short = tooLong ? long.substring(0, 50) + '...' : long;
+				short = tooLong ? long.substring(0, 50).trim() + '...' : long;
 
 		var showMoreInfo = function() { self.setState({showMore: true});  }
 		var showLessInfo = function() { self.setState({showMore: false}); }
@@ -35,7 +35,9 @@ class Description extends React.Component {
 			<View>
 			<Text style={styles.leftQM} >{'\u201C'}</Text>
 			<View>
-				<Text style={styles.description}>{showMore ? long : short}</Text>
+				<Text style={styles.description}>
+					{Tool.urlify(showMore ? long : short, styles.link)}
+				</Text>
 				{renderBtn()}
 			</View>
 			<Text style={styles.rightQM}>{'\u201D'}</Text>
@@ -59,6 +61,9 @@ var styles = StyleSheet.create({
 	knowMoreBtn: {
 		marginLeft: 20,
 		marginTop: 10,
+		color: Config.BASE_COLOR, 
+	},
+	link: {
 		color: Config.BASE_COLOR, 
 	}
 })
