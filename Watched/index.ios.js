@@ -81,7 +81,7 @@ var TabBar = React.createClass({
         
         </TabBarIOS.Item>
 
-        {/*<TabBarIOS.Item 
+        <TabBarIOS.Item 
             name='电影'
             iconName={'ion|ios-film-outline'}
             selectedIconName={'ion|ios-film'}
@@ -98,7 +98,7 @@ var TabBar = React.createClass({
                   rightCorner: require('./Movie/components/icons/Search'),
               })}
 
-        </TabBarIOS.Item>*/}
+        </TabBarIOS.Item>
         
         <TabBarIOS.Item 
             name='我'

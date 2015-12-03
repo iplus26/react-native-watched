@@ -22,6 +22,7 @@ var Interaction = require('./Interaction');
 var LoadingPage = require('./../Views/LoadingPage');
 var MovieDetail = require('./../Movie/MovieDetail');
 var UserThumbnail = require('./components/UserThumbnail');
+var PostText = require('./PostText');
 
 // wheels made by others
 var Spinner = require('react-native-spinkit');
@@ -93,6 +94,8 @@ var TimelineListView = React.createClass({
       })
         .then((response) => response.json())
         .then((d) => {
+
+         //  console.log(d)
           
           var cache = self.dataCache;
 
@@ -125,7 +128,7 @@ var TimelineListView = React.createClass({
 
   renderRow: function(post, sectionID, rowID) {
 
-    console.log(rowID);
+    // console.log(rowID);
 
     this.lastRenderedRowID = parseInt(rowID) > this.lastRenderedRowID ? 
     parseInt(rowID) : this.lastRenderedRowID;
@@ -151,8 +154,7 @@ var TimelineListView = React.createClass({
 
     return (
       <TouchableHighlight onLongPress={onLongPress}
-              underlayColor = '#fff'
-              onPress={onPress}>
+              underlayColor = '#fff'>
         {self._renderContent(post)}
       </TouchableHighlight>);
 
@@ -194,14 +196,9 @@ var TimelineListView = React.createClass({
           </View>
 
           { this._renderAttachments(post.attachments[0]) }
-      
-          { function () {
-            if (post.text) {
-              return <IvText style={{marginTop: 10, }}>
-              {post.text.replace(/(\r\n|\n|\r)/gm, " ").trim()}</IvText>
-            }
-          } ()}
 
+          <PostText {...this.props} post={post} />
+          
           <Interaction data={post} token={this.props.access_token}/>
           
           </View>

@@ -55,20 +55,54 @@ var Tool = {
   },
 
   // return an array
-  urlify: function(text, style) {
-    var urlRegex = /(https?:\/\/[^\s]+)/g, 
-        self = this,
-        urlified, style = style ? style : {};
+  urlify: function(text, style, m) {
 
-    urlified = text.split(urlRegex).map(function(str) {
-      if (urlRegex.test(str)) {
+    var pattern = 'https?:\/\/[^\s]+', 
+      mentions, mentionedID = [], regURL, regAll, 
+      self = this, urlified, props,
+      style = style ? style : {};
+      
+    // 是否有@在广播里
+    if (m) {
+      mentions = m.mentions; props = m.props;
+      mentionedID = mentions.map(function(mention) {
+        return '@' + (mention.uid || mention.id);
+      });
+    }
+    
+    // regURL 匹配字符串中的URL
+    // regAll 匹配字符串中的URL和@
+    regURL = new RegExp(pattern, 'g'),
+    regAll = new RegExp('(' + (mentionedID.length > 0 ?
+          pattern + '|' + mentionedID.join('|') : pattern) + ')', 'g');
+
+    urlified = text.split(regAll).map(function(str) {
+
+      var index, new_props = {};
+
+      for (var prop in props) {
+        if (props.hasOwnProperty(prop)){
+          new_props[prop] = props[prop];
+        }
+      } 
+
+      if (regURL.test(str)) {
         return (<Text style={style} onPress={self.openURL.bind(self, str)}>{str}</Text>);
+      } else if (mentionedID.indexOf(str) > -1) {
+        index = mentionedID.indexOf(str);
+        new_props.user = mentions[index];
+        return (<Text style={style} onPress={function() {
+          props.toRoute({
+            component: require('./../User/User'),
+            name: '用户主页',
+            passProps: new_props,
+          })}}>@{mentions[index].screen_name}</Text>);
       } else {
         return str;
       }
-    })
+    });
 
-    
+
     return urlified;
   },
 
