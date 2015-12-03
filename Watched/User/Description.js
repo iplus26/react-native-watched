@@ -18,7 +18,8 @@ class Description extends React.Component {
 				long = this.props.desc || '', 
 				tooLong = long.length >= 50,
 				showMore = this.state.showMore,
-				short = tooLong ? long.substring(0, 50).trim() + '...' : long;
+				short = tooLong ? long.substring(0, 50)
+				.replace(/(\n\n\n\n\n|\n\n\n\n|\n\n\n|\n\n)/gm, '\n').trim() + '...' : long;
 
 		var showMoreInfo = function() { self.setState({showMore: true});  }
 		var showLessInfo = function() { self.setState({showMore: false}); }
@@ -26,21 +27,21 @@ class Description extends React.Component {
 			if (tooLong) {
 				return (<TouchableHighlight underlayColor='white'
 					onPress={showMore ? showLessInfo : showMoreInfo}>
-						<Text style={styles.knowMoreBtn}>{showMore ? '收起' : '显示全部'}</Text>
+					<Text style={styles.knowMoreBtn}>{showMore ? '收起' : '显示全部'}</Text>
 				</TouchableHighlight>)
 			}
 		}
 
 		return (
 			<View>
-			<Text style={styles.leftQM} >{'\u201C'}</Text>
+			{/*<Text style={styles.leftQM} >{'\u201C'}</Text>*/}
 			<View>
 				<Text style={styles.description}>
 					{Tool.urlify(showMore ? long : short, styles.link)}
 				</Text>
 				{renderBtn()}
 			</View>
-			<Text style={styles.rightQM}>{'\u201D'}</Text>
+			{/*<Text style={styles.rightQM}>{'\u201D'}</Text>*/}
 			</View>)
 	}
 }
@@ -56,7 +57,7 @@ var styles = StyleSheet.create({
 	description: {
 		fontSize: 16,
 		fontWeight: '300',
-		marginLeft: 20,
+		// marginLeft: 20,
 	},
 	knowMoreBtn: {
 		marginLeft: 20,
@@ -65,7 +66,7 @@ var styles = StyleSheet.create({
 	},
 	link: {
 		color: Config.BASE_COLOR, 
-	}
+	},
 })
 
 module.exports = Description;

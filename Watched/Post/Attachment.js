@@ -14,6 +14,7 @@ var MovieDetail = require('./../Movie/MovieDetail');
 var IvText = require('./../lib/IvText');
 var Tool = require('./../lib/Tool');
 var Config = require('./../lib/Config');
+var Movie = require('./Attachment/Movie');
 
 // wheels others made
 var BlurView = require('react-native-blur').BlurView;
@@ -55,7 +56,7 @@ var Attachment = React.createClass({
       case 'song': // 推荐单曲
       case 'music':
       case 'book':
-      case 'movie' : return this._renderMovie(attachment, false); // 电影
+      case 'movie' : return <Movie {...this.props}/>
       case '':
         if (this._isFollowUser(attachment.expaned_href)) {
           return this._renderUser(attachment);
@@ -85,42 +86,6 @@ var Attachment = React.createClass({
 
     return null;
 
-  },
-
-  _renderMovie: function(attachment, readerMode) {
-    var self = this;
-    var hasMedia = Array.isArray(attachment.media) &&
-    attachment.media.length > 0 && typeof attachment.media[0] === 'object' ? true : null;
-
-    return (
-      <View style={{paddingTop: 10, }}>
-      <TouchableHighlight onPress = { () => self._openURL(attachment, readerMode || false) }
-      underlayColor = '#02b875' activeOpacity = {0}>
-
-      <Image source={{uri: hasMedia && attachment.media[0].original_src }}>      
-        <BlurView blurType='xlight' style = {[styles.attachment, {borderWidth: 0}]}>
-          <View style={styles.thumbnailContainer}>
-          <Image style={{
-            // 这里的样式有问题 缩略图并不是始终等宽 但是我在这里用不好flexbox
-            width: 60, 
-            height: hasMedia && 60 / attachment.media[0].sizes.raw[0] * attachment.media[0].sizes.raw[1],
-            marginRight: 10,
-          }} source={{uri: hasMedia && attachment.media[0].original_src  }}/>
-          </View>
-          <View style={{flex: 2,}}>
-            <IvText style = {{fontWeight: '400', }}>{attachment.title}</IvText>
-            {function() {
-              if(attachment.description)
-              return <IvText>{attachment.description.replace(/(\r\n|\n|\r)/gm, " ").trim() }</IvText>
-            }()}
-            
-          </View>
-        </BlurView>
-      </Image>
-      </TouchableHighlight>
-      </View>
-
-    );
   },
 
   _renderImages: function(images) {
