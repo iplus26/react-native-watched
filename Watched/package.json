@@ -18,6 +18,7 @@
     "react-native-refreshable-listview": "*",
     "react-native-modalbox": "^1.2.3",
     "react-native-safari-view": "^0.1.4",
-    "react-native-spinkit": "0.0.5"
+    "react-native-spinkit": "0.0.5",
+    "react-native-blur": "*"
   }
 }
