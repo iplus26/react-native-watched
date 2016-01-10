@@ -68,11 +68,12 @@ var TimelineListView = React.createClass({
   },
 
   _onEndReached: function() {
-    if (!this.hasMore()) 
-    console.log(this.hasMore() + '广播列表到底，获取更多内容...');
-    // this.fetchData(this.props.access_token, {
-    //   until_id: ds[ds.length - 1].id,
-    // }, this.props.user_id);
+    if (!this.hasMore()) {
+      console.log(this.hasMore() + '广播列表到底，获取更多内容...');
+      this.fetchData(this.props.user_id, {
+        until_id: this.dataCache[this.dataCache.length - 1].id,
+      });
+    }
   },
 
   fetchData: function(user_id, options) {
@@ -144,16 +145,21 @@ var TimelineListView = React.createClass({
       });
     };
     
-    var onPress = function() {
-      this.props.toRoute({
-        name: '详情',
-        component: require('./PostDetail'),
-        passProps: Tool.extend(this.props, {id: post.id}),
-      });
-    }.bind(this);
+    // var onPress = function() {
+    //   this.props.toRoute({
+    //     name: '详情',
+    //     component: require('./PostDetail'),
+    //     passProps: Tool.extend(this.props, {id: post.id}),
+    //   });
+    // }.bind(this);
+
+    var onPress = function() { // for debug purpose
+      console.log(post);
+    }
 
     return (
       <TouchableHighlight onLongPress={onLongPress}
+              onPress = {onPress}
               underlayColor = '#fff'>
         {self._renderContent(post)}
       </TouchableHighlight>);
@@ -257,7 +263,7 @@ var TimelineListView = React.createClass({
           refreshingIndictatorComponent={<LoadingPage />}
           style={styles.listView}
           onEndReached={this._onEndReached}
-          // onEndReachedThreshold={0}
+          onEndReachedThreshold={0}
         />
         );
 
