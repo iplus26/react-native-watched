@@ -43,6 +43,8 @@ var Tool = {
 
   openURL: function(url, callback, readerMode) {
 
+    console.log(url);
+
     if (url == null && callback) {
       callback();
     } else {

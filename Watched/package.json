@@ -11,14 +11,14 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "moment": "^2.10.6",
     "gb-native-router": "0.6.0",
-    "react-native": "^0.14.2",
+    "moment": "^2.10.6",
+    "react-native": "^0.17.0",
+    "react-native-blur": "*",
     "react-native-icons": "^0.6.3",
-    "react-native-refreshable-listview": "*",
     "react-native-modalbox": "^1.2.3",
-    "react-native-safari-view": "^0.1.4",
-    "react-native-spinkit": "0.0.5",
-    "react-native-blur": "*"
+    "react-native-refreshable-listview": "*",
+    "react-native-safari-view": "^0.3.0",
+    "react-native-spinkit": "0.0.5"
   }
 }

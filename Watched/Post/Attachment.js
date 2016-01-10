@@ -44,7 +44,7 @@ var Attachment = React.createClass({
     }
   },
 
-  _isFollowUser: function(url) {
+  isUserURI: function(url) {
     return /http:\/\/www\.douban\.com\/people\/.+\//i.test(url);
   },
 
@@ -53,13 +53,13 @@ var Attachment = React.createClass({
     var attachment = this.props.attachment;
 
     switch (attachment.type) {
-      case 'song': // 推荐单曲
-      case 'music':
-      case 'book':
-      case 'movie' : return <Movie {...this.props}/>
+      case 'song':  return this.renderAttachment(attachment);// 推荐单曲
+      case 'music': return this.renderAttachment(attachment);
+      case 'book':  return this.renderAttachment(attachment);
+      case 'movie': return <Movie {...this.props}/>
       case '':
-        if (this._isFollowUser(attachment.expaned_href)) {
-          return this._renderUser(attachment);
+        if (this.isUserURI(attachment.expaned_href)) {
+          return this.renderUser(attachment);
         }
       case 'com.douban.group':
       case 'com.douban.book':
@@ -68,9 +68,9 @@ var Attachment = React.createClass({
       case 'event':
       case 'photos': // 上传到相册
       case 'rec':
-        return this._renderAttachment(attachment);
+        return this.renderAttachment(attachment);
       case 'com.douban.site': // 推荐日记
-        return this._renderAttachment(attachment, true);
+        return this.renderAttachment(attachment, true);
       case 'image':
         if (Array.isArray(attachment.media) && attachment.media.length > 0) {
 
@@ -93,26 +93,34 @@ var Attachment = React.createClass({
     // 暂时只显示第一张图
 
     return (
-      <View underlayColor='#fff' style={{
-            flex: 1, 
-            width: images[0].sizes.small[0] ,
-            marginTop: 10
-          }}>
-          <Image style={{
-             width: images[0].sizes.small[0] ,
-             height: images[0].sizes.small[1] ,
-            }} source={{uri: images[0].src }}/>
+      <View underlayColor='#fff' style={styles.imageContainer}>
+
+          {function () {
+           var components = images.map(function(img) {
+              return <Image 
+                      resizeMode="contain"
+                      style={styles.image} 
+                      source={{uri: img.src }}/>
+            })
+
+           console.log(components);
+           return components;
+          }()}
+          
         </View>);
   },
 
-  _renderUser: function(attachment) {
-    var self = this;
-    var hasMedia = Array.isArray(attachment.media) &&
-    attachment.media.length > 0 && typeof attachment.media[0] === 'object' ? true : null;
+  renderUser: function(attachment) {
+
+    // 生成 User 的用户页面
+
+    let self = this;
+    let hasMedia = (Array.isArray(attachment.media) &&
+        attachment.media.length > 0 && typeof attachment.media[0] === 'object') ? true : null;
 
     return (
       <View style={{paddingTop: 10, }}>
-      <TouchableHighlight onPress = { () => self._openURL(attachment, readerMode || false) }
+      <TouchableHighlight onPress = { () => self._openURL(attachment, false) }
       underlayColor = '#02b875' activeOpacity = {0}>
 
       <Image source={{uri: hasMedia && attachment.media[0].original_src }}>      
@@ -137,32 +145,41 @@ var Attachment = React.createClass({
     );
   },
 
-  _renderAttachment: function(attachment, readerMode) {
+  renderAttachment: function(attachment, renderMode) {
+    // TODO: 想要用 options 将这个函数重新封装一下
 
-    var self = this;
-    var hasMedia = Array.isArray(attachment.media) &&
-    attachment.media.length > 0 && typeof attachment.media[0] === 'object' ? true : null;
+    let self = this;
 
-    return (
-      <View style={{paddingTop: 10, }}>
-      <TouchableHighlight onPress = { () => self._openURL(attachment, readerMode || false) }
-      underlayColor = '#82D9B9' activeOpacity = {0}>
+    return _renderAttachment(attachment, renderMode);
 
-      <View style = {styles.attachment}>
-          <View style={{flex: 1, }}>
-            <IvText style = {{fontWeight: '400', }}>{attachment.title}</IvText>
-            {function() {
-              if(attachment.description)
-              return <IvText>{attachment.description.replace(/(\r\n|\n|\r)/gm, " ").trim() }</IvText>
-            }()}
+    function _renderAttachment(attachment, readerMode) {
+
+      let hasMedia = (Array.isArray(attachment.media) &&
+          attachment.media.length > 0 && typeof attachment.media[0] === 'object') ? true : null;
+
+      readerMode = readerMode || false; // Safari Viewer Controller 的阅读器模式, 默认为关
+
+      return (
+        <View style={{paddingTop: 10, }}>
+        <TouchableHighlight onPress = { () => self._openURL(attachment, readerMode) }
+        underlayColor = '#82D9B9' activeOpacity = {0}>
+
+        <View style = {styles.attachment}>
+            <View style={{flex: 1, }}>
+              <IvText style = {{fontWeight: '400', }}>{attachment.title}</IvText>
+              {function() {
+                if(attachment.description)
+                return <IvText>{attachment.description.replace(/(\r\n|\n|\r)/gm, " ").trim() }</IvText>
+              }()}
+            </View>
           </View>
+        </TouchableHighlight>
         </View>
-      </TouchableHighlight>
-      </View>
 
-    );
+      );
 
-  },
+    }
+  }, 
 
 });
 
@@ -185,6 +202,20 @@ var styles = StyleSheet.create({
     height: 50,
     borderRadius: 5,
   },
+
+  imageContainer: {
+    flex: 1,
+    alignItems: 'stretch',
+  },
+
+  image: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  }
 
 });
 

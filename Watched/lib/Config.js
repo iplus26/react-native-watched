@@ -1,8 +1,8 @@
 'use strict';
 
-var url_schemes = 'watched://';
+const url_schemes = 'watched://';
 
-var Config = {
+const Config = {
 
   url_schemes: url_schemes,
   redirect_uri: url_schemes + 'oauth-callback',

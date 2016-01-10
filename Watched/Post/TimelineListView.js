@@ -67,7 +67,7 @@ var TimelineListView = React.createClass({
     return this.dataCache.length > this.lastRenderedRowID + 1
   },
 
-  _onEndReached: function() {
+  onEndReached: function() {
     if (!this.hasMore()) {
       console.log(this.hasMore() + '广播列表到底，获取更多内容...');
       this.fetchData(this.props.user_id, {
@@ -161,23 +161,25 @@ var TimelineListView = React.createClass({
       <TouchableHighlight onLongPress={onLongPress}
               onPress = {onPress}
               underlayColor = '#fff'>
-        {self._renderContent(post)}
+        {self.renderContent(post)}
       </TouchableHighlight>);
 
   },
 
-  _renderContent: function(post) {
+  renderContent: function(post) {
 
-    var reshared = post.reshared_status && typeof post.reshared_status === 'object';
-    var reshare_header = reshared ? (
+    var isReshared, reshare_header, post, id;
+
+    isReshared = post.reshared_status && typeof post.reshared_status === 'object';
+    reshare_header = isReshared ? (
       <View style = {[styles.cell, {borderBottomWidth: 0, paddingBottom: 0, }]}>
               <Image style = {{marginLeft: 30, width: 20, height: 20, borderRadius: 5, }} 
                   source = {{uri: post.user.small_avatar}} />
               <Text style = {{ marginLeft: 10, }}>
                   {post.user.screen_name} 转播了</Text>
             </View>) : null;
-    var post = reshared ? post.reshared_status : post;
-    var id = post.user.uid ? (<Text style={{color: Config.GRAY_COLOR, flex: 2, textAlign: 'left', }}>
+    post = isReshared ? post.reshared_status : post;
+    id = post.user.uid ? (<Text style={{color: Config.GRAY_COLOR, flex: 2, textAlign: 'left', }}>
             @{post.user.uid}</Text>) : null;
 
     return (
@@ -194,14 +196,14 @@ var TimelineListView = React.createClass({
             color: Config.BASE_COLOR, marginRight: 2, fontWeight: '400', }}>
             {post.user.screen_name}
           </IvText>
-          { this._renderTitle.call(this, post.title) }
+          { this.renderTitle.call(this, post.title) }
           </View>
 
           <View style = {{justifyContent: 'center', flexDirection: 'row', }}>
           {id}{this.renderTime.call(this, post.created_at)}
           </View>
 
-          { this._renderAttachments(post.attachments[0]) }
+          { this.renderAttachments(post.attachments[0]) }
 
           <PostText {...this.props} post={post} />
           
@@ -212,9 +214,10 @@ var TimelineListView = React.createClass({
       </View>);
   },
 
-  _renderAttachments: function(attachment) {
+  renderAttachments: function(attachment) {
 
     // 根据每一条 post 的 attachments 属性来显示不同的内容, 
+    // 调用 Attachment Component
     if (attachment) {
       return <Attachment {...this.props} attachment = {attachment}/>;
     }
@@ -227,11 +230,11 @@ var TimelineListView = React.createClass({
       {time}</Text>);
   },
 
-  _renderTitle: function(title) {
+  renderTitle: function(title) {
     var action = title.replace(/\[score\](\d)\[\/score\]/, function(match, score) {
-      var str = '';
+      var str = '', i = 0;
       if (score > 0) {
-        for (var i = 0; i < score; i++) {
+        for (i = 0; i < score; i++) {
           str += '\u2605';
         }
         for (i = 0; i < 5 - score; i++) {
@@ -262,7 +265,7 @@ var TimelineListView = React.createClass({
           loadData={this.onLoad}
           refreshingIndictatorComponent={<LoadingPage />}
           style={styles.listView}
-          onEndReached={this._onEndReached}
+          onEndReached={this.onEndReached}
           onEndReachedThreshold={0}
         />
         );
