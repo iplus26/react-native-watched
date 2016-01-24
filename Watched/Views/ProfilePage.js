@@ -61,22 +61,23 @@ var ProfilePage = React.createClass({
     });
   },
 
-  _logout: function() {
-    var self = this;
+  // _logout: function() {
 
-    AsyncStorage.multiRemove(['access_token', 'douban_user_name'], function(err) {
+  //   AsyncStorage.multiRemove(['access_token', 'douban_user_name']);
 
-      self.setState({
-        access_token: null,
-        douban_user: null,
-        login: false,
-        douban_user_name: null,
-      });
+  //   this.setState({
+  //       access_token: null,
+  //       douban_user: null,
+  //       login: false,
+  //       douban_user_name: null,
+  //   });
 
-    });
-  },
+  // },
 
   render: function() {
+
+    console.log('re-render ProfilePage page. ');
+
     if (!this.state.login) {
       return (
 
@@ -120,6 +121,8 @@ var ProfilePage = React.createClass({
     LinkingIOS.openURL(url);
 
     function _handleUrl(event) {
+
+      console.log(event);
 
       // 拒绝授权 https://www.example.com/back?error=access_denied
       // 成功授权 https://www.example.com/back?code=9b73a4248

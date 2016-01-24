@@ -30,13 +30,19 @@ var Timeline = React.createClass({
     };
   },
 
-  _getLoginInfo: function() {
+  getLoginInfo: function() {
+
+    // 获取用户的登录信息
 
     var self = this;
 
     AsyncStorage.multiGet(['access_token', 'douban_user_name'], function(err, user) {
 
+      console.log(user);
+
       if (!!user[0][1] && !!user[1][1]) {
+
+        console.log(['获取到用户信息', user[0][1], ', ', user[1][1]]);
 
         self.props.setRightProps({
           token: user[0][1],
@@ -47,6 +53,10 @@ var Timeline = React.createClass({
           access_token: user[0][1],
           douban_user_name: user[1][1],
         });
+      } else {
+
+        // 用户未登录，提示用户登录
+        
       }
     });
 
@@ -62,7 +72,7 @@ var Timeline = React.createClass({
         </View>);
     // jshint ignore: end
     } else {
-      this._getLoginInfo();
+      this.getLoginInfo();
       // jshint ignore: start
       return <LoadingPage />;
     // jshint ignore: end

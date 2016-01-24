@@ -1,26 +1,27 @@
 'use strict';
 
-var React = require('react-native');
-var {LinkingIOS,
+let React = require('react-native');
+let {LinkingIOS,
   Touchablehighlight,
   Text, } = React;
 
-var SafariView = require('react-native-safari-view');
+let SafariView = require('react-native-safari-view');
 
-var Tool = {
+let Tool = {
 
+  // transform a parameter object into string  
   param: function(obj) {
-    var str = [];
-    for (var p in obj) {
+    let str = [];
+    for (let p in obj) {
       if (obj.hasOwnProperty(p)) {
-        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
       }
     }
-    return str.join("&");
+    return str.join('&');
   },
 
   extend: function() {
-    var copy, prop, i = 0,
+    let copy, prop, i = 0,
         target = {},      // 目标对象
         length = arguments.length; 
 
@@ -45,13 +46,14 @@ var Tool = {
 
     console.log(url);
 
-    if (url == null && callback) {
+    if (url === null && callback) {
       callback();
     } else {
       SafariView.isAvailable()
         .then(available => SafariView.show({
             url: url,
             readerMode: readerMode,
+            tintColor: require('./Config').BASE_COLOR,
           }));
     }
   },
@@ -59,10 +61,11 @@ var Tool = {
   // return an array
   urlify: function(text, style, m) {
 
-    var pattern = 'https?:\/\/[^\s]+', 
-      mentions, mentionedID = [], regURL, regAll, 
-      self = this, urlified, props,
-      style = style ? style : {};
+    let pattern = 'https?:\/\/[^\s]+', 
+        mentions, mentionedID = [], regURL, regAll, 
+        urlified, props;
+
+    style = style ? style : {};
       
     // 是否有@在广播里
     if (m) {
@@ -80,25 +83,29 @@ var Tool = {
 
     urlified = text.split(regAll).map(function(str) {
 
-      var index, new_props = {};
+      let index, new_props = {};
 
-      for (var prop in props) {
+      for (let prop in props) {
         if (props.hasOwnProperty(prop)){
           new_props[prop] = props[prop];
         }
       } 
 
       if (regURL.test(str)) {
+        // jshint ignore: start 
         return (<Text style={style} onPress={self.openURL.bind(self, str)}>{str}</Text>);
+        // jshint ignore: end
       } else if (mentionedID.indexOf(str) > -1) {
         index = mentionedID.indexOf(str);
         new_props.user = mentions[index];
+        // jshint ignore: start 
         return (<Text style={style} onPress={function() {
           props.toRoute({
             component: require('./../User/User'),
             name: '用户主页',
             passProps: new_props,
           })}}>@{mentions[index].screen_name}</Text>);
+        // jshint ignore: end
       } else {
         return str;
       }

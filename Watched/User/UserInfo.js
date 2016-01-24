@@ -65,15 +65,18 @@ class UserInfo extends React.Component {
 		}
 
 		var addShareBtn = function() {
+			// jshint ignore: start
 			return (<TouchableHighlight style={styles.userActionBtn}
 				onPress={this.onShare.bind(this, user)}>
 				<Icon name='ion|ios-upload-outline' color={Config.BASE_COLOR}
 					size={22} style={styles.icon} />
 				</TouchableHighlight>)
-		}.bind(this)
+			// jshint ignore: end
+		}.bind(this);
 
 		var addUserActionBtn = function(){
 			if (this.props.user_id === user.id){
+					// jshint ignore: start 
 				return (
 					<TouchableHighlight style={styles.userActionBtn} 
 						onPress={this.onLogout.bind(this, user)}>
@@ -83,8 +86,10 @@ class UserInfo extends React.Component {
 						<Text style={styles.userActionText}>退出帐号</Text>
 					</View>
 					</TouchableHighlight>)
+				// jshint ignore: end
 			} else if (user.hasOwnProperty('relation')) {
 				if (user.relation === 'contact') {
+					// jshint ignore: start 
 					return (
 					<TouchableHighlight style={[styles.userActionBtn, {marginRight: 0}]} 
 						onPress={this.onUnfollow.bind(this, user)}>
@@ -94,6 +99,7 @@ class UserInfo extends React.Component {
 							<Text style={styles.userActionText}>正在关注</Text>
 					</View>
 					</TouchableHighlight>)
+					// jshint ignore: end
 				} 
 			} else {
 				// 陌生人
